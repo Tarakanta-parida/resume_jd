@@ -1,0 +1,10 @@
+{
+    "git.ignoreLimitWarning": true,
+    "python.defaultInterpreterPath": "${workspaceFolder}/backend/.venv/Scripts/python.exe",
+    "python.analysis.extraPaths": [
+        "${workspaceFolder}/backend",
+        "${workspaceFolder}/backend/.venv/Lib/site-packages"
+    ],
+    "python.envFile": "${workspaceFolder}/backend/.env",
+    "css.lint.unknownAtRules": "ignore"
+}
