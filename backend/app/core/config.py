@@ -21,7 +21,6 @@ class Settings:
     SUPABASE_KEY: str = os.getenv("SUPABASE_KEY", "")
     SUPABASE_BUCKET_NAME: str = os.getenv("SUPABASE_BUCKET_NAME", "ats-resumes")
     
-    # CORS Origins
     BACKEND_CORS_ORIGINS: list = [
         "http://localhost:3000",
         "http://127.0.0.1:3000",
@@ -30,6 +29,7 @@ class Settings:
         "http://localhost:3002",
         "http://127.0.0.1:3002",
         "http://localhost:8000",
+        "https://resumatch-frontend-vx5j.onrender.com"
     ]
 
 settings = Settings()
