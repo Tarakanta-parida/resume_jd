@@ -264,7 +264,7 @@ ${certText ? `\nCERTIFICATIONS\n-------------------------------------\n${certTex
             <span>Original Resume</span>
             <FileText className="w-4 h-4" />
           </div>
-          <div className="bg-white text-slate-800 p-10 rounded-2xl shadow-xl min-h-[780px] text-xs leading-relaxed border border-black/5 selection:bg-slate-200">
+          <div className="bg-white text-slate-800 p-4 sm:p-10 rounded-2xl shadow-xl min-h-[400px] sm:min-h-[780px] text-xs leading-relaxed border border-black/5 selection:bg-slate-200">
             <ResumePaper data={originalResume} />
           </div>
         </div>
@@ -277,7 +277,7 @@ ${certText ? `\nCERTIFICATIONS\n-------------------------------------\n${certTex
           </div>
           <div
             ref={optContainerRef}
-            className="bg-white text-slate-800 p-10 rounded-2xl shadow-xl min-h-[780px] text-xs leading-relaxed border border-black/5 selection:bg-slate-200 relative optimized-paper"
+            className="bg-white text-slate-800 p-4 sm:p-10 rounded-2xl shadow-xl min-h-[400px] sm:min-h-[780px] text-xs leading-relaxed border border-black/5 selection:bg-slate-200 relative optimized-paper"
           >
             <ResumePaper data={optimizedResume} originalData={originalResume} showAdded={showAdded} showOptimized={showOptimized} />
           </div>

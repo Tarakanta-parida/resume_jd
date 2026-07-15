@@ -49,12 +49,12 @@ export default function Home() {
   const pageMeta = getPageTitle();
 
   return (
-    <div className="flex min-h-screen w-full bg-slate-950 text-slate-100 transition-colors duration-300 data-[light=true]:bg-slate-50 data-[light=true]:text-slate-900" data-light={theme === 'light'}>
+    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-slate-950 text-slate-100 transition-colors duration-300 data-[light=true]:bg-slate-50 data-[light=true]:text-slate-900" data-light={theme === 'light'}>
       {/* Sidebar Navigation */}
       <Sidebar />
 
       {/* Main Content Area */}
-      <main className="ml-[260px] flex-grow p-10 min-h-screen flex flex-col">
+      <main className="lg:ml-[260px] flex-grow p-4 md:p-10 min-h-screen flex flex-col w-full overflow-x-hidden">
         {/* Top Header Bar */}
         <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 mb-10 w-full">
           <div>

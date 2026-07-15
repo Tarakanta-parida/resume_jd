@@ -30,17 +30,17 @@ export default function Sidebar() {
   ] as const;
 
   return (
-    <aside className="w-[260px] bg-slate-900 border-r border-white/10 flex flex-col p-6 fixed h-screen z-10 transition-colors duration-300 select-none data-[light=true]:bg-white data-[light=true]:border-black/10" data-light={theme === 'light'}>
-      <div className="flex items-center gap-3 mb-10">
-        <div className="w-10 h-10 bg-gradient-to-br from-violet-600 to-blue-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-violet-500/25">
-          <Sparkles className="w-5 h-5" />
+    <aside className="w-full lg:w-[260px] bg-slate-900 border-b lg:border-b-0 lg:border-r border-white/10 flex flex-col p-4 lg:p-6 lg:fixed lg:h-screen z-10 transition-colors duration-300 select-none data-[light=true]:bg-white data-[light=true]:border-black/10 shrink-0" data-light={theme === 'light'}>
+      <div className="flex items-center gap-2 lg:gap-3 mb-4 lg:mb-10">
+        <div className="w-8 h-8 lg:w-10 lg:h-10 bg-gradient-to-br from-violet-600 to-blue-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-violet-500/25 shrink-0">
+          <Sparkles className="w-4 h-4 lg:w-5 lg:h-5" />
         </div>
-        <span className="font-title font-extrabold text-xl bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent tracking-tight">
+        <span className="font-title font-extrabold text-lg lg:text-xl bg-gradient-to-r from-violet-400 to-blue-400 bg-clip-text text-transparent tracking-tight truncate">
           ResuMatch AI
         </span>
       </div>
 
-      <nav className="flex flex-col gap-2 flex-grow">
+      <nav className="flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-visible pb-1 lg:pb-0 scrollbar-hide flex-none lg:flex-grow">
         {menuItems.map(item => {
           const Icon = item.icon;
           const isActive = currentTab === item.id;
@@ -50,7 +50,7 @@ export default function Sidebar() {
               key={item.id}
               onClick={() => !item.disabled && setCurrentTab(item.id)}
               disabled={item.disabled}
-              className={`flex items-center gap-3.5 px-4 py-3 rounded-xl font-medium transition-all duration-300 w-full text-left cursor-pointer
+              className={`flex items-center justify-center lg:justify-start gap-2 lg:gap-3.5 px-3 py-2 lg:px-4 lg:py-3 rounded-xl font-medium transition-all duration-300 text-left cursor-pointer whitespace-nowrap shrink-0 lg:w-full
                 ${isActive
                   ? 'bg-gradient-to-r from-violet-600 to-blue-500 text-white shadow-lg shadow-violet-500/20'
                   : theme === 'light'
@@ -59,14 +59,14 @@ export default function Sidebar() {
                 }
               `}
             >
-              <Icon className="w-5 h-5" />
-              <span>{item.label}</span>
+              <Icon className="w-4 h-4 lg:w-5 lg:h-5 shrink-0" />
+              <span className="text-[13px] lg:text-base">{item.label}</span>
             </button>
           );
         })}
       </nav>
 
-      <div className="mt-auto flex flex-col gap-4 pt-4 border-t border-white/10 data-[light=true]:border-black/10" data-light={theme === 'light'}>
+      <div className="hidden lg:flex mt-auto flex-col gap-4 pt-4 border-t border-white/10 data-[light=true]:border-black/10" data-light={theme === 'light'}>
         <div className="flex items-center justify-between p-2.5 bg-slate-800 rounded-xl text-sm font-semibold text-slate-400 data-[light=true]:bg-slate-100 data-[light=true]:text-slate-600" data-light={theme === 'light'}>
           <span className="capitalize">{theme} Theme</span>
           <button
