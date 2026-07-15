@@ -280,7 +280,10 @@ export const useResumeStore = create<ResumeState>((set, get) => ({
         body: optFormData
       });
       
-      if (!optResponse.ok) throw new Error('Optimization failed');
+      if (!optResponse.ok) {
+        if (optResponse.status === 404) throw new Error('Resume not found');
+        throw new Error('Optimization failed');
+      }
       const optData = await optResponse.json();
       
       set({
@@ -297,9 +300,13 @@ export const useResumeStore = create<ResumeState>((set, get) => ({
         isOptimized: true,
         currentTab: 'analysis'
       });
-    } catch (err) {
+    } catch (err: any) {
       console.error(err);
-      alert('Optimization failed. Ensure the FastAPI backend is running on port 8080.');
+      if (err.message === 'Resume not found') {
+        alert('Your session expired because the backend restarted. Please refresh the page and re-upload your resume PDF.');
+      } else {
+        alert('Optimization failed. Please check if the backend is running properly.');
+      }
     } finally {
       set({ isLoading: false });
     }
