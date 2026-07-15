@@ -3,11 +3,10 @@
 import React, { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { useResumeStore } from '../store/useResumeStore';
-import { Upload, FileText, Briefcase, FileUp, Sparkles, X } from 'lucide-react';
+import { FileText, X } from 'lucide-react';
 
 export default function DashboardView() {
   const {
-    theme,
     resumeName,
     jdText,
     setJdText,
@@ -36,57 +35,50 @@ export default function DashboardView() {
   const isReady = (resumeName !== '' || originalResume !== null) && jdText.trim().length > 15;
 
   return (
-    <div className="grid grid-cols-1 xl:grid-cols-2 gap-8 items-stretch w-full">
+    <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch w-full mb-8">
       {/* Upload Resume Panel */}
-      <div className="flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-2xl shadow-xl transition-all duration-300 hover:border-white/10 data-[light=true]:bg-white data-[light=true]:border-black/5 data-[light=true]:shadow-sm" data-light={theme === 'light'}>
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="font-title font-bold text-lg text-white flex items-center gap-2.5 data-[light=true]:text-slate-800" data-light={theme === 'light'}>
-            <FileUp className="w-5 h-5 text-violet-500" />
-            1. Upload Resume
-          </h3>
-        </div>
+      <div className="flex flex-col">
+        <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4">
+          <span className="text-xl">📄</span> Your resume
+        </h3>
 
-        <div className="flex-grow flex flex-col justify-center">
+        <div className="flex-grow flex flex-col justify-start">
           {!(resumeName || originalResume) ? (
             <div
               {...getRootProps()}
-              className={`border-2 border-dashed border-white/10 rounded-xl p-12 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center bg-white/[0.01] hover:border-violet-500 hover:bg-violet-500/[0.02]
-                ${isDragActive ? 'border-violet-500 bg-violet-500/[0.05]' : ''}
-                ${theme === 'light' ? 'border-black/10 hover:border-violet-500 bg-black/[0.01]' : ''}
+              className={`border border-dashed rounded-xl p-10 text-center cursor-pointer transition-all duration-300 flex flex-col items-center justify-center min-h-[220px]
+                ${isDragActive ? 'border-cyan-400 bg-cyan-50' : 'border-slate-300 bg-slate-50 hover:bg-slate-100 hover:border-slate-400'}
               `}
             >
               <input {...getInputProps()} />
-              <div className="w-14 h-14 bg-gradient-to-br from-violet-600 to-blue-500 rounded-2xl flex items-center justify-center text-white shadow-md shadow-violet-500/10 mb-5 transition-transform duration-300 group-hover:scale-105">
-                <Upload className="w-6 h-6" />
+              <div className="w-12 h-12 bg-[#6eb9f7] rounded-lg flex items-center justify-center text-white mb-4 shadow-sm shadow-blue-200">
+                <span className="text-2xl leading-none font-bold">↑</span>
               </div>
-              <p className="font-semibold text-white text-base mb-1.5 data-[light=true]:text-slate-800" data-light={theme === 'light'}>
-                Drag and drop your resume here
+              <p className="text-slate-600 text-sm mb-1">
+                Click to upload or <strong className="text-slate-800 font-bold">drag and drop</strong>
               </p>
-              <p className="text-slate-400 text-xs data-[light=true]:text-slate-500" data-light={theme === 'light'}>
-                Supports PDF, DOCX, and JSON formats
+              <p className="text-slate-400 text-xs">
+                PDF up to 10MB
               </p>
-              <button className="mt-6 px-5 py-2.5 bg-gradient-to-r from-violet-600 to-blue-500 text-white rounded-lg text-xs font-semibold shadow shadow-violet-500/20 hover:scale-[1.02] transition-transform duration-300">
-                Browse Files
-              </button>
             </div>
           ) : (
-            <div className="flex items-center justify-between bg-slate-800/60 border border-white/5 p-4 rounded-xl data-[light=true]:bg-slate-100 data-[light=true]:border-black/5" data-light={theme === 'light'}>
+            <div className="flex items-center justify-between bg-slate-50 border border-slate-200 p-4 rounded-lg">
               <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 bg-violet-600/10 border border-violet-500/20 rounded-lg flex items-center justify-center text-violet-400">
+                <div className="w-10 h-10 bg-[#e0f2fe] rounded-lg flex items-center justify-center text-[#0284c7]">
                   <FileText className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-sm text-white truncate max-w-[200px] data-[light=true]:text-slate-800" data-light={theme === 'light'}>
-                    {resumeName || 'Sample_Resume.docx'}
+                  <p className="font-bold text-sm text-slate-800 truncate max-w-[220px]">
+                    {resumeName || 'resume_final.pdf'}
                   </p>
-                  <p className="text-slate-400 text-xs data-[light=true]:text-slate-500" data-light={theme === 'light'}>
-                    Structure loaded
+                  <p className="text-slate-500 text-xs">
+                    Ready to analyze
                   </p>
                 </div>
               </div>
               <button
                 onClick={removeResumeFile}
-                className="p-1.5 hover:bg-red-500/10 hover:text-red-400 text-slate-400 rounded-lg transition-colors cursor-pointer"
+                className="p-1.5 hover:bg-red-50 hover:text-red-500 text-slate-400 rounded-lg transition-colors cursor-pointer"
                 title="Remove File"
               >
                 <X className="w-4 h-4" />
@@ -97,40 +89,40 @@ export default function DashboardView() {
       </div>
 
       {/* Target Job Description Panel */}
-      <div className="flex flex-col bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-2xl shadow-xl transition-all duration-300 hover:border-white/10 data-[light=true]:bg-white data-[light=true]:border-black/5 data-[light=true]:shadow-sm" data-light={theme === 'light'}>
-        <div className="flex justify-between items-center mb-6">
-          <h3 className="font-title font-bold text-lg text-white flex items-center gap-2.5 data-[light=true]:text-slate-800" data-light={theme === 'light'}>
-            <Briefcase className="w-5 h-5 text-violet-500" />
-            2. Target Job Description
-          </h3>
-        </div>
+      <div className="flex flex-col">
+        <h3 className="font-bold text-lg text-slate-800 flex items-center gap-2 mb-4">
+          <span className="text-xl">🎯</span> Target job
+        </h3>
 
-        <div className="flex flex-col gap-4 flex-grow min-h-[260px]">
+        <div className="flex flex-col gap-3 flex-grow h-full">
+          {jdText.length > 50 && (
+            <div className="self-start px-3 py-1 bg-[#e0f2fe] text-[#0284c7] text-xs font-bold rounded-full mb-1">
+              Data Analyst
+            </div>
+          )}
           <div
-            className="flex-grow bg-slate-950/40 border border-white/5 p-5 rounded-xl transition-colors min-h-[210px] flex flex-col focus-within:border-violet-500 data-[light=true]:bg-slate-50 data-[light=true]:border-black/5"
-            data-light={theme === 'light'}
+            className="flex-grow bg-slate-50 border border-slate-200 p-5 rounded-xl min-h-[220px] flex flex-col focus-within:border-cyan-400 focus-within:shadow-sm"
           >
             <textarea
               value={jdText}
               onChange={(e) => setJdText(e.target.value)}
               placeholder="Paste target job description details here... Include required technical skills, experience requirements, and key terms to match."
-              className="w-full flex-grow bg-transparent text-white text-sm leading-relaxed resize-none focus:outline-none scrollbar-none data-[light=true]:text-slate-800"
-              data-light={theme === 'light'}
+              className="w-full h-full flex-grow bg-transparent text-slate-700 text-sm leading-relaxed resize-none focus:outline-none scrollbar-thin scrollbar-thumb-slate-200"
             />
           </div>
         </div>
       </div>
 
-      {/* Action Trigger Button */}
-      <div className="col-span-1 xl:col-span-2 flex justify-center mt-6">
-        <button
-          onClick={runOptimization}
-          disabled={!isReady}
-          className={`flex items-center gap-2 px-12 py-4 bg-gradient-to-r from-violet-600 to-blue-500 text-white rounded-xl font-title font-bold text-lg shadow-lg shadow-violet-500/20 transition-all duration-300 hover:scale-[1.02] disabled:opacity-40 disabled:scale-100 disabled:shadow-none disabled:cursor-not-allowed cursor-pointer`}
-        >
-          <Sparkles className="w-5 h-5" />
-          Optimize Resume
-        </button>
+      {/* Action Trigger Button (Now just floating or below?) */}
+      <div className="col-span-1 lg:col-span-2 flex justify-center mt-4">
+        {isReady && (
+          <button
+            onClick={runOptimization}
+            className="px-10 py-3 bg-cyan-600 text-white rounded-lg font-bold text-base shadow hover:bg-cyan-700 transition-colors"
+          >
+            Run ATS Analysis
+          </button>
+        )}
       </div>
     </div>
   );

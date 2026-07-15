@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { useResumeStore } from '../store/useResumeStore';
-import Sidebar from '../components/Sidebar';
 import Loader from '../components/Loader';
 import DashboardView from '../components/DashboardView';
 import AnalysisView from '../components/AnalysisView';
@@ -11,37 +10,37 @@ import ReportView from '../components/ReportView';
 
 export default function Home() {
   const { 
-    theme, 
     currentTab, 
-    loadSampleProfile 
+    loadSampleProfile,
+    setCurrentTab
   } = useResumeStore();
 
   const getPageTitle = () => {
     switch (currentTab) {
       case 'dashboard':
         return {
-          title: 'Resume Optimizer',
-          sub: 'Upload your resume and the target job description to match keywords and boost your score.'
+          title: 'Optimize your resume',
+          sub: 'Upload your resume and target job description to get keyword-matched recommendations'
         };
       case 'analysis':
         return {
-          title: 'ATS Match & Analysis',
-          sub: 'Review missing keywords, category scores, and customized recommendations.'
+          title: 'Your analysis',
+          sub: 'Detailed keyword matching & ATS compatibility check'
         };
       case 'comparer':
         return {
-          title: 'Before & After Comparison',
-          sub: 'Review optimized enhancements made directly to your resume without altering layout.'
+          title: 'Before & after comparison',
+          sub: 'See exactly how your resume was optimized to match job requirements'
         };
       case 'report':
         return {
-          title: 'ATS Audit Report',
-          sub: 'Detailed compatibility audit report, keyword frequency check, and action items.'
+          title: 'ATS audit report',
+          sub: 'Detailed compatibility analysis and actionable recommendations'
         };
       default:
         return {
-          title: 'Resume Optimizer',
-          sub: 'Upload your resume and the target job description to match keywords and boost your score.'
+          title: 'Optimize your resume',
+          sub: 'Upload your resume and target job description to get keyword-matched recommendations'
         };
     }
   };
@@ -49,40 +48,42 @@ export default function Home() {
   const pageMeta = getPageTitle();
 
   return (
-    <div className="flex flex-col lg:flex-row min-h-screen w-full bg-slate-950 text-slate-100 transition-colors duration-300 data-[light=true]:bg-slate-50 data-[light=true]:text-slate-900" data-light={theme === 'light'}>
-      {/* Sidebar Navigation */}
-      <Sidebar />
+    <div className="flex flex-col min-h-screen w-full bg-white text-slate-900 font-sans">
+      {/* Top Header */}
+      <header className="flex items-center justify-between px-8 py-4 border-b border-slate-100">
+        <div className="flex items-center gap-3 cursor-pointer" onClick={() => setCurrentTab('dashboard')}>
+          <div className="w-6 h-6 bg-[#0097b2] rounded flex items-center justify-center shrink-0"></div>
+          <span className="font-bold text-xl text-[#0097b2] tracking-tight">ResuMatch</span>
+        </div>
+        
+        <div className="flex items-center gap-3 bg-[#f0f9fa] border border-[#d6eef1] px-4 py-2 rounded-lg shrink-0">
+          <span className="text-sm font-semibold text-[#00829a] flex items-center gap-2">
+            📄 Template Profile:
+          </span>
+          <select
+            onChange={(e: React.ChangeEvent<HTMLSelectElement>) => loadSampleProfile(e.target.value)}
+            className="bg-slate-800 border-none text-white rounded px-3 py-1.5 text-sm font-semibold focus:outline-none cursor-pointer"
+          >
+            <option value="">-- Custom Upload --</option>
+            <option value="software_engineer">Software Engineer</option>
+            <option value="data_analyst">Data Analyst</option>
+            <option value="product_manager">Product Manager</option>
+            <option value="marketing_specialist">Marketing Specialist</option>
+          </select>
+        </div>
+      </header>
 
       {/* Main Content Area */}
-      <main className="lg:ml-[260px] flex-grow p-4 md:p-10 min-h-screen flex flex-col w-full overflow-x-hidden">
-        {/* Top Header Bar */}
-        <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-6 mb-10 w-full">
-          <div>
-            <h1 className="font-title font-bold text-3xl text-white tracking-tight mb-1 data-[light=true]:text-slate-900" data-light={theme === 'light'}>
-              {pageMeta.title}
-            </h1>
-            <p className="text-slate-400 text-sm max-w-xl data-[light=true]:text-slate-500" data-light={theme === 'light'}>
-              {pageMeta.sub}
-            </p>
-          </div>
-
-          <div className="flex items-center gap-3 bg-slate-900/40 border border-white/5 px-4 py-2.5 rounded-xl shrink-0 data-[light=true]:bg-white data-[light=true]:border-black/5" data-light={theme === 'light'}>
-            <span className="text-xs font-bold text-slate-400 data-[light=true]:text-slate-500" data-light={theme === 'light'}>
-              Load Template Profile:
-            </span>
-            <select
-              onChange={(e: React.ChangeEvent<HTMLSelectElement>) => loadSampleProfile(e.target.value)}
-              className="bg-slate-950 border border-white/10 text-white rounded-lg px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-violet-500 cursor-pointer data-[light=true]:bg-slate-100 data-[light=true]:border-black/10 data-[light=true]:text-slate-800"
-              data-light={theme === 'light'}
-            >
-              <option value="">-- Custom Upload --</option>
-              <option value="software_engineer">Software Engineer</option>
-              <option value="data_analyst">Data Analyst</option>
-              <option value="product_manager">Product Manager</option>
-              <option value="marketing_specialist">Marketing Specialist</option>
-            </select>
-          </div>
-        </header>
+      <main className="flex-grow max-w-6xl mx-auto w-full p-8 flex flex-col">
+        {/* Page Title Header */}
+        <div className="mb-10 w-full">
+          <h1 className="font-bold text-[32px] text-slate-900 mb-2">
+            {pageMeta.title}
+          </h1>
+          <p className="text-slate-500 text-[15px]">
+            {pageMeta.sub}
+          </p>
+        </div>
 
         {/* Render Active Tab Views */}
         <div className="flex-grow flex flex-col">
@@ -91,6 +92,22 @@ export default function Home() {
           {currentTab === 'comparer' && <ComparerView />}
           {currentTab === 'report' && <ReportView />}
         </div>
+        
+        {/* Navigation Arrows for single-page feel */}
+        {currentTab !== 'report' && (
+          <div className="flex justify-center mt-12 mb-8">
+            <button 
+              onClick={() => {
+                const tabs: any[] = ['dashboard', 'analysis', 'comparer', 'report'];
+                const nextIdx = tabs.indexOf(currentTab) + 1;
+                if (nextIdx < tabs.length) setCurrentTab(tabs[nextIdx]);
+              }}
+              className="w-10 h-10 rounded-full bg-slate-600 text-white flex items-center justify-center hover:bg-slate-700 transition-colors"
+            >
+              ↓
+            </button>
+          </div>
+        )}
       </main>
 
       {/* Global Fullscreen Processing Loader */}

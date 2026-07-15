@@ -2,19 +2,14 @@
 
 import React, { useState } from 'react';
 import { useResumeStore } from '../store/useResumeStore';
-import { LineChart, ClipboardList, CheckCircle2, AlertTriangle, ChevronRight, ArrowUp } from 'lucide-react';
-import Gauges from './Gauges';
+import { BarChart2, Target, Key } from 'lucide-react';
 
 export default function AnalysisView() {
   const {
-    theme,
     originalScore,
     optimizedScore,
     matchedKeywords,
-    missingKeywords,
-    sectionScore,
-    sectionsFound,
-    formattingIssues
+    missingKeywords
   } = useResumeStore();
 
   const [activeTab, setActiveTab] = useState<'missing' | 'matched'>('missing');
@@ -23,125 +18,140 @@ export default function AnalysisView() {
   const currentKeywordsList = activeTab === 'missing' ? missingKeywords : matchedKeywords;
 
   const categories = [
-    { name: 'Keyword Matching & Density', current: originalScore + 5 },
-    { name: 'Skills & Competency Alignments', current: Math.max(originalScore - 10, 45) },
-    { name: 'Experience & Role Match', current: originalScore + 2 },
-    { name: 'Education & Certification Validation', current: 95 }
+    { name: 'Keywords', current: originalScore + 5, potential: Math.min(originalScore + 25, 98) },
+    { name: 'Skills match', current: Math.max(originalScore - 10, 45), potential: Math.min(originalScore + 10, 95) },
+    { name: 'Experience', current: originalScore + 2, potential: Math.min(originalScore + 22, 98) },
+    { name: 'Education', current: 95, potential: 98 }
   ];
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch w-full">
-      {/* Score Verdict Card */}
-      <div className="bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-2xl shadow-xl flex flex-col items-center justify-center text-center data-[light=true]:bg-white data-[light=true]:border-black/5 data-[light=true]:shadow-sm" data-light={theme === 'light'}>
-        <div className="flex justify-between w-full items-center mb-6">
-          <h3 className="font-title font-bold text-lg text-white flex items-center gap-2.5 data-[light=true]:text-slate-800" data-light={theme === 'light'}>
-            <LineChart className="w-5 h-5 text-violet-500" />
-            ATS Match Verdict
-          </h3>
-        </div>
-
-        <div className="flex justify-around w-full gap-8 mb-6">
-          <Gauges score={originalScore} label="Current Score" colorClass="#ef4444" />
-          <Gauges score={optimizedScore} label="Potential Score" colorClass="#06b6d4" />
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-bold rounded-full mb-3">
-            <ArrowUp className="w-3.5 h-3.5" />
-            <span>+{diff}% Match Improvement</span>
+    <div className="flex flex-col gap-6 w-full mb-8">
+      
+      {/* Top Banner & Score */}
+      <div className="flex flex-col md:flex-row justify-between items-start gap-4 w-full">
+        <div className="flex flex-col gap-3 w-full md:w-3/4">
+          <div className="inline-flex items-center gap-1.5 px-4 py-1.5 bg-[#ecfdf5] border border-[#a7f3d0] text-[#059669] text-sm font-semibold rounded-full self-start">
+            ✓ +{diff}% improvement potential
           </div>
-          <p className="text-slate-400 text-sm leading-relaxed max-w-sm data-[light=true]:text-slate-500" data-light={theme === 'light'}>
-            {diff > 20
-              ? `Critical gaps successfully bypassed! Adding ${missingKeywords.length} missing keywords and aligning description verbs raised match metrics to ${optimizedScore}%.`
-              : `Your resume is well aligned! Incorporating missing skills pushed compatibility to ${optimizedScore}% to confidently clear ATS filters.`
-            }
-          </p>
+          <div className="bg-[#ecfdf5] border border-[#a7f3d0] p-4 rounded-lg text-[#065f46] text-sm">
+            <strong>{missingKeywords.length} critical gaps found.</strong> By adding missing keywords and optimizing language, you can reach {optimizedScore}% match score.
+          </div>
+        </div>
+        
+        {/* Current Score Box positioned top right as in screenshot */}
+        <div className="hidden md:flex flex-col items-center justify-center bg-[#f0f9fa] border border-[#d6eef1] rounded-lg p-4 min-w-[140px] absolute right-8 top-[130px]">
+          <span className="text-[#0284c7] text-xs font-bold tracking-wider mb-1">CURRENT SCORE</span>
+          <span className="text-[#0284c7] font-bold text-4xl">{originalScore}%</span>
         </div>
       </div>
 
-      {/* Section Progress Bars Card */}
-      <div className="bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-2xl shadow-xl data-[light=true]:bg-white data-[light=true]:border-black/5 data-[light=true]:shadow-sm" data-light={theme === 'light'}>
-        <div className="flex justify-between w-full items-center mb-6">
-          <h3 className="font-title font-bold text-lg text-white flex items-center gap-2.5 data-[light=true]:text-slate-800" data-light={theme === 'light'}>
-            <ClipboardList className="w-5 h-5 text-violet-500" />
-            ATS Section Analysis
-          </h3>
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch w-full mt-2">
+        {/* Score Verdict Card */}
+        <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm flex flex-col">
+          <div className="flex items-center gap-2 mb-8">
+            <BarChart2 className="w-5 h-5 text-slate-500" />
+            <h3 className="font-bold text-base text-slate-800">
+              Match verdict
+            </h3>
+          </div>
+
+          <div className="flex justify-around items-center w-full flex-grow pb-4">
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-32 h-32 rounded-full bg-[#ffe4e6] flex items-center justify-center">
+                <span className="text-4xl font-bold text-[#be123c]">{originalScore}%</span>
+              </div>
+              <span className="text-sm text-slate-500 font-medium">Current</span>
+            </div>
+            
+            <div className="flex flex-col items-center gap-3">
+              <div className="w-32 h-32 rounded-full bg-[#ecfdf5] flex items-center justify-center">
+                <span className="text-4xl font-bold text-[#047857]">{optimizedScore}%</span>
+              </div>
+              <span className="text-sm text-slate-500 font-medium">Potential</span>
+            </div>
+          </div>
         </div>
 
-        <div className="flex flex-col gap-5">
-          {categories.map((cat, i) => {
-            const potential = Math.min(cat.current + 20, 98);
-            return (
+        {/* Section Progress Bars Card */}
+        <div className="bg-white border border-slate-200 p-6 rounded-xl shadow-sm flex flex-col">
+          <div className="flex items-center gap-2 mb-6">
+            <Target className="w-5 h-5 text-red-400" />
+            <h3 className="font-bold text-base text-slate-800">
+              Alignment breakdown
+            </h3>
+          </div>
+
+          <div className="flex flex-col gap-5">
+            {categories.map((cat, i) => (
               <div key={i} className="flex flex-col gap-2">
-                <div className="flex justify-between text-xs font-semibold">
-                  <span className="text-slate-400 data-[light=true]:text-slate-600" data-light={theme === 'light'}>{cat.name}</span>
-                  <span className="text-white data-[light=true]:text-slate-800" data-light={theme === 'light'}>{cat.current}% ➔ {potential}%</span>
+                <div className="flex justify-between text-sm font-medium">
+                  <span className="text-slate-600">{cat.name}</span>
+                  <span className="text-slate-500 text-xs">{cat.current}% → {cat.potential}%</span>
                 </div>
-                <div className="w-full h-2 bg-slate-950 rounded-full overflow-hidden relative data-[light=true]:bg-slate-100" data-light={theme === 'light'}>
+                <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden relative">
                   <div
-                    className="h-full bg-gradient-to-r from-violet-600 to-blue-500 rounded-full transition-all duration-1000"
-                    style={{ width: `${potential}%` }}
+                    className="h-full bg-[#0ea5e9] rounded-full transition-all duration-1000"
+                    style={{ width: `${cat.potential}%` }}
                   />
                 </div>
               </div>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* Keywords Badge Panel */}
-      <div className="lg:col-span-2 bg-slate-900/50 backdrop-blur-xl border border-white/5 p-8 rounded-2xl shadow-xl data-[light=true]:bg-white data-[light=true]:border-black/5 data-[light=true]:shadow-sm" data-light={theme === 'light'}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 border-b border-white/10 pb-4 mb-6 data-[light=true]:border-black/10" data-light={theme === 'light'}>
-          <h3 className="font-title font-bold text-lg text-white flex items-center gap-2.5 data-[light=true]:text-slate-800" data-light={theme === 'light'}>
-            Keyword Matching Report
-          </h3>
-          <div className="flex gap-2">
-            <button
-              onClick={() => setActiveTab('missing')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer
-                ${activeTab === 'missing'
-                  ? 'bg-slate-800 text-white data-[light=true]:bg-slate-200 data-[light=true]:text-slate-800'
-                  : 'text-slate-400 hover:text-white'
-                }
-              `}
-              data-light={theme === 'light'}
-            >
-              Missing Keywords ({missingKeywords.length})
-            </button>
-            <button
-              onClick={() => setActiveTab('matched')}
-              className={`px-4 py-1.5 rounded-lg text-xs font-semibold transition-all duration-200 cursor-pointer
-                ${activeTab === 'matched'
-                  ? 'bg-slate-800 text-white data-[light=true]:bg-slate-200 data-[light=true]:text-slate-800'
-                  : 'text-slate-400 hover:text-white'
-                }
-              `}
-              data-light={theme === 'light'}
-            >
-              Matched Keywords ({matchedKeywords.length})
-            </button>
+            ))}
           </div>
         </div>
 
-        <div className="flex flex-wrap gap-2.5 max-h-[220px] overflow-y-auto pr-2">
-          {currentKeywordsList.length === 0 ? (
-            <p className="text-slate-500 text-sm italic p-4">No keywords detected in this category.</p>
-          ) : (
-            currentKeywordsList.map((kw, i) => (
-              <span
-                key={i}
-                className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full text-xs font-medium border
-                  ${activeTab === 'missing'
-                    ? 'bg-red-500/10 border-red-500/20 text-red-400'
-                    : 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
-                  }
-                `}
-              >
-                {activeTab === 'missing' ? <AlertTriangle className="w-3.5 h-3.5" /> : <CheckCircle2 className="w-3.5 h-3.5" />}
-                {kw}
-              </span>
-            ))
-          )}
+        {/* Keywords Badge Panel */}
+        <div className="lg:col-span-2 bg-white border border-slate-200 p-6 rounded-xl shadow-sm flex flex-col mt-2">
+          <div className="flex items-center gap-2 mb-6">
+            <Key className="w-5 h-5 text-yellow-500" />
+            <h3 className="font-bold text-base text-slate-800">
+              Keyword analysis
+            </h3>
+          </div>
+
+          <div className="flex gap-6 border-b border-slate-100 mb-6">
+            <button
+              onClick={() => setActiveTab('missing')}
+              className={`pb-3 text-sm font-bold transition-all duration-200 cursor-pointer border-b-2
+                ${activeTab === 'missing'
+                  ? 'border-slate-800 text-slate-800'
+                  : 'border-transparent text-slate-400 hover:text-slate-600'
+                }
+              `}
+            >
+              Missing ({missingKeywords.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('matched')}
+              className={`pb-3 text-sm font-bold transition-all duration-200 cursor-pointer border-b-2
+                ${activeTab === 'matched'
+                  ? 'border-slate-800 text-slate-800'
+                  : 'border-transparent text-slate-400 hover:text-slate-600'
+                }
+              `}
+            >
+              Matched ({matchedKeywords.length})
+            </button>
+          </div>
+
+          <div className="flex flex-wrap gap-3">
+            {currentKeywordsList.length === 0 ? (
+              <p className="text-slate-500 text-sm italic py-2">No keywords in this category.</p>
+            ) : (
+              currentKeywordsList.map((kw, i) => (
+                <span
+                  key={i}
+                  className={`inline-flex items-center px-4 py-2 rounded text-xs font-bold uppercase tracking-wider
+                    ${activeTab === 'missing'
+                      ? 'bg-[#fee2e2] text-[#b91c1c]'
+                      : 'bg-[#dcfce7] text-[#15803d]'
+                    }
+                  `}
+                >
+                  {kw}
+                </span>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </div>
