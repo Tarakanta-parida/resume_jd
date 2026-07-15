@@ -120,13 +120,13 @@ def local_rule_based_optimize(data: Dict[str, Any], missing: List[str]) -> Dict[
     Performs dynamic rule-based replacements to simulate LLM optimizer output.
     """
     optimized = {
-        "personalInfo": data.get("personalInfo", {}),
-        "summary": data.get("summary", ""),
-        "skills": list(data.get("skills", [])),
+        "personalInfo": data.get("personalInfo") or {},
+        "summary": data.get("summary") or "",
+        "skills": list(data.get("skills") or []),
         "experience": [],
         "projects": [],
-        "education": data.get("education", []),
-        "certifications": list(data.get("certifications", []))
+        "education": data.get("education") or [],
+        "certifications": list(data.get("certifications") or [])
     }
     
     # 1. Optimize summary
@@ -143,8 +143,8 @@ def local_rule_based_optimize(data: Dict[str, Any], missing: List[str]) -> Dict[
         optimized["skills"].append(f'<mark class="add" data-tooltip="Added missing skill found in Job Description">{m}</mark>')
 
     # 3. Optimize experience
-    for idx, exp in enumerate(data.get("experience", [])):
-        bullets = list(exp.get("bullets", []))
+    for idx, exp in enumerate(data.get("experience") or []):
+        bullets = list(exp.get("bullets") or [])
         if idx == 0 and len(bullets) > 0:
             # Preserve original first bullet and append keyword and metric
             orig_bullet_0 = bullets[0]
@@ -162,20 +162,20 @@ def local_rule_based_optimize(data: Dict[str, Any], missing: List[str]) -> Dict[
                 bullets[1] = f'<mark class="mod" data-tooltip="Optimized sentence structure for keywords">{orig_bullet_1}{kw_inject2}, increasing operational performance by <mark class="add" data-tooltip="Added measurable result">35%</mark>.</mark>'
                 
         optimized["experience"].append({
-            "role": exp.get("role", ""),
-            "company": exp.get("company", ""),
-            "duration": exp.get("duration", ""),
+            "role": exp.get("role") or "",
+            "company": exp.get("company") or "",
+            "duration": exp.get("duration") or "",
             "bullets": bullets
         })
 
     # 4. Optimize projects
-    for proj in data.get("projects", []):
-        bullets = list(proj.get("bullets", []))
+    for proj in data.get("projects") or []:
+        bullets = list(proj.get("bullets") or [])
         if len(bullets) > 0:
             bullets[0] = f'{bullets[0]} <mark class="mod" data-tooltip="Optimized for JD keyword density">using modern industry-aligned frameworks.</mark>'
         optimized["projects"].append({
-            "name": proj.get("name", ""),
-            "description": proj.get("description", ""),
+            "name": proj.get("name") or "",
+            "description": proj.get("description") or "",
             "bullets": bullets
         })
     return optimized
