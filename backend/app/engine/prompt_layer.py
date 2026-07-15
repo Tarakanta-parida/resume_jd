@@ -195,11 +195,7 @@ Return the response ONLY in a valid JSON object matching this exact schema:
     "linkedin": "LinkedIn URL (if present, else empty string)"
   },
   "summary": "Professional Summary or Objective (if present, else empty string)",
-  "skills": [
-    "Exact line 1 from skills section (e.g. 'Programming Languages: Python, SQL' or 'Power BI - DAX, Data Modeling')",
-    "Exact line 2 from skills section",
-    ...
-  ],
+  "skills": ["Skill 1", "Skill 2", ...],
   "experience": [
     {
       "role": "Job Title",
