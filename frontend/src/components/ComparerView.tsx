@@ -331,15 +331,32 @@ function ResumePaper({
         Technical Skills
       </h3>
       <div className="flex flex-col gap-0.5 mb-4 text-[11px] text-black">
-        {data.skills
-          .map(s => processBulletText(s, showAdded, showOptimized))
-          .filter(s => s.trim().length > 0)
-          .map((s, idx) => {
-            const formattedSkill = s.replace(/^([^:]+:|.*?\s[-–—]\s)/, '<strong class="text-black">$1</strong>');
+        {(() => {
+          const groupedSkills: string[] = [];
+          data.skills
+            .map(s => processBulletText(s, showAdded, showOptimized))
+            .filter(s => s.trim().length > 0)
+            .forEach(s => {
+              const plainText = s.replace(/<[^>]*>/g, '');
+              // If it has a colon or a dash acting as a separator, it's a new category line
+              if (plainText.match(/^[^:,]+(:|.*?\s[-–—]\s)/)) {
+                groupedSkills.push(s);
+              } else {
+                if (groupedSkills.length > 0) {
+                  groupedSkills[groupedSkills.length - 1] += `, ${s}`;
+                } else {
+                  groupedSkills.push(s);
+                }
+              }
+            });
+
+          return groupedSkills.map((s, idx) => {
+            const formattedSkill = s.replace(/^([^:]+:|.*?\s[-–—]\s)/, '<strong>$1</strong>');
             return (
               <div key={idx} dangerouslySetInnerHTML={{ __html: formattedSkill }} />
             );
-          })}
+          });
+        })()}
       </div>
 
       {data.experience && data.experience.length > 0 && (
