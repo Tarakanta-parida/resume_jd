@@ -78,7 +78,7 @@ const getApiBaseUrl = () => {
   }
   if (typeof window !== 'undefined') {
     if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-      return '/api/v1';
+      return 'https://resumatch-backend-22e5.onrender.com/api/v1';
     }
   }
   return 'http://localhost:8080/api/v1';
