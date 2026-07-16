@@ -101,19 +101,6 @@ def calculate_ats_metrics(resume_text: str, jd_text: str) -> Dict[str, Any]:
         else:
             missing_keywords.append(kw.upper())
             
-    # Compute keyword score
-    total_keywords = len(jd_keywords)
-    matched_count = len(matched_keywords)
-    match_percentage = round((matched_count / total_keywords) * 100) if total_keywords > 0 else 0
-    
-    # Capped initial score (original score)
-    original_score = min(max(match_percentage, 35), 75)
-    
-    # Potential score assuming full optimization
-    potential_score = min(original_score + len(missing_keywords) * 4, 95)
-    if potential_score < 85:
-        potential_score = 88  # Boost to a target safe zone
-        
     # Analyze sections
     resume_lower = resume_text.lower()
     sections = {
@@ -122,8 +109,18 @@ def calculate_ats_metrics(resume_text: str, jd_text: str) -> Dict[str, Any]:
         "Experience": any(x in resume_lower for x in ["experience", "employment", "work history"]),
         "Education": any(x in resume_lower for x in ["education", "academic"])
     }
-    
     section_score = round(sum(1 for val in sections.values() if val) / len(sections) * 100)
+    
+    # Compute keyword score
+    total_keywords = len(jd_keywords)
+    matched_count = len(matched_keywords)
+    keyword_score = round((matched_count / total_keywords) * 100) if total_keywords > 0 else 100
+    
+    # Original Score based on 70% keywords and 30% sections
+    original_score = round((keyword_score * 0.7) + (section_score * 0.3))
+    
+    # Potential score assuming full keyword optimization
+    potential_score = round((100 * 0.7) + (section_score * 0.3))
     
     # Format Checks
     has_email = bool(re.search(r'[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}', resume_text))
